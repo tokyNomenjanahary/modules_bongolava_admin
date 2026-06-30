@@ -1,0 +1,4 @@
+moderate bongolava content:
+  title: 'Modérer les offres et événements Bongolava'
+  description: 'Accéder aux pages de validation des offres d''emploi et des événements.'
+  restrict access: true

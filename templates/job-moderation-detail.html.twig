@@ -1,0 +1,108 @@
+{#
+/**
+ * @file
+ * Détail d'une offre d'emploi pour validation admin.
+ */
+#}
+<div class="bongolava-admin bongolava-admin-detail">
+  <p><a href="{{ back_url }}" class="bongolava-admin-back">← {{ 'Retour à la liste'|t }}</a></p>
+
+  <div class="bongolava-admin-header">
+    {# <div>
+      <h1>{{ job.title }}</h1>
+      <p class="bongolava-admin-meta">
+        <span class="bongolava-admin-badge bongolava-admin-badge--{{ job.status }}">{{ status_label }}</span>
+        {% if job.user_type %}
+          <span class="bongolava-admin-badge">{{ job.user_type }}</span>
+        {% endif %}
+      </p>
+    </div> #}
+    {% if is_pending %}
+      <div class="bongolava-admin-actions">
+        {% if approve_form %}
+          <div class="bongolava-admin-approve-form">{{ approve_form }}</div>
+        {% endif %}
+        <button type="button" class="button button--danger bongolava-admin-open-cancel" data-dialog="bongolava-cancel-dialog">
+          {{ 'Annuler l\'offre'|t }}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if job.image_url %}
+    <div class="bongolava-admin-image">
+      <img src="{{ job.image_url }}" alt="{{ job.title }}">
+    </div>
+  {% endif %}
+
+  <div class="bongolava-admin-grid">
+    <div class="bongolava-admin-card">
+      <h2 class="bongolava-admin-strong">{{ 'Informations générales'|t }}</h2>
+      <dl>
+        <dt>{{ 'Entreprise'|t }}</dt><dd>{{ job.company|default('—') }}</dd>
+        <dt>{{ 'Localisation'|t }}</dt><dd>{{ job.location|default('—') }}</dd>
+        <dt>{{ 'Secteur'|t }}</dt><dd>{{ job.sector|default('—') }}</dd>
+        <dt>{{ 'Type de contrat'|t }}</dt><dd>{{ job.contract_type|default('—') }}</dd>
+        <dt>{{ 'Salaire'|t }}</dt><dd>{{ job.salary|default('—') }}</dd>
+        <dt>{{ 'Expire le'|t }}</dt><dd>{{ job.expires_at|default('—') }}</dd>
+        <dt>{{ 'Urgent'|t }}</dt><dd>{{ job.is_urgent ? 'Oui'|t : 'Non'|t }}</dd>
+        <dt>{{ 'Télétravail'|t }}</dt><dd>{{ job.is_remote ? 'Oui'|t : 'Non'|t }}</dd>
+        <dt>{{ 'Auteur'|t }}</dt><dd>{{ job.owner|default('—') }}</dd>
+        <dt>{{ 'Créée le'|t }}</dt><dd>{{ job.created_at }}</dd>
+        <dt>{{ 'Vues'|t }}</dt><dd>{{ job.views_count }}</dd>
+      </dl>
+    </div>
+
+    <div class="bongolava-admin-card">
+      <h2 class="bongolava-admin-strong">{{ 'Contact'|t }}</h2>
+      <dl>
+        <dt>{{ 'Email'|t }}</dt><dd>{{ job.contact_email|default('—') }}</dd>
+        <dt>{{ 'Téléphone'|t }}</dt><dd>{{ job.contact_phone|default('—') }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="bongolava-admin-card">
+    <h2 class="bongolava-admin-strong">{{ 'Description'|t }}</h2>
+    <div class="bongolava-admin-text">{{ job.description|default('—')|nl2br }}</div>
+  </div>
+
+  {% if job.responsibilities %}
+    <div class="bongolava-admin-card">
+      <h2 class="bongolava-admin-strong">{{ 'Responsabilités'|t }}</h2>
+      <div class="bongolava-admin-text">{{ job.responsibilities|nl2br }}</div>
+    </div>
+  {% endif %}
+
+  {% if job.requirements %}
+    <div class="bongolava-admin-card">
+      <h2 class="bongolava-admin-strong">{{ 'Exigences'|t }}</h2>
+      <div class="bongolava-admin-text">{{ job.requirements|nl2br }}</div>
+    </div>
+  {% endif %}
+
+  {% if job.cancellation_reason %}
+    <div class="bongolava-admin-card bongolava-admin-card--warning">
+      <h2 class="bongolava-admin-strong">{{ 'Raison d\'annulation'|t }}</h2>
+      <div class="bongolava-admin-text">{{ job.cancellation_reason|nl2br }}</div>
+    </div>
+  {% endif %}
+
+  {% if is_pending and cancel_form %}
+    <div id="bongolava-cancel-dialog" class="bongolava-admin-dialog" hidden>
+      <div class="bongolava-admin-dialog__backdrop" data-close-dialog></div>
+      <div class="bongolava-admin-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="bongolava-cancel-title">
+        <div class="bongolava-admin-dialog__header">
+          <h2 id="bongolava-cancel-title">{{ 'Annuler l\'offre'|t }}</h2>
+          <button type="button" class="bongolava-admin-dialog__close" data-close-dialog aria-label="{{ 'Fermer'|t }}">×</button>
+        </div>
+        <div class="bongolava-admin-dialog__body">
+          {{ cancel_form }}
+          <p class="bongolava-admin-dialog__alt">
+            <a href="{{ cancel_url }}">{{ 'Ouvrir sur une page dédiée'|t }}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

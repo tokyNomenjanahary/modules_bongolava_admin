@@ -1,0 +1,107 @@
+{#
+/**
+ * @file
+ * Liste filtrée et paginée des offres ou événements.
+ */
+#}
+<div class="bongolava-admin bongolava-admin-list">
+  <div class="bongolava-admin-list__header">
+    {# <h1>{{ title }}</h1> #}
+    <p class="bongolava-admin-list__count">
+      {{ total }} résultat{{ total > 1 ? 's' : '' }}
+    </p>
+  </div>
+
+  <div class="bongolava-admin-filters">
+    {{ filter_form }}
+  </div>
+
+  {% if items is not empty %}
+    <div class="bongolava-admin-table-wrap">
+      <table class="bongolava-admin-table">
+        <thead>
+          {% if list_type == 'job' %}
+            <tr>
+              <th>{{ 'ID'|t }}</th>
+              <th>{{ 'Titre'|t }}</th>
+              <th>{{ 'Entreprise'|t }}</th>
+              <th>{{ 'Localisation'|t }}</th>
+              <th>{{ 'Secteur'|t }}</th>
+              <th>{{ 'Contrat'|t }}</th>
+              {# <th>{{ 'Publié par'|t }}</th> #}
+              <th>{{ 'Statut'|t }}</th>
+              <th>{{ 'Créé le'|t }}</th>
+              <th>{{ 'Actions'|t }}</th>
+            </tr>
+          {% else %}
+            <tr>
+              <th>{{ 'ID'|t }}</th>
+              <th>{{ 'Titre'|t }}</th>
+              <th>{{ 'Organisateur'|t }}</th>
+              <th>{{ 'Type'|t }}</th>
+              <th>{{ 'Localisation'|t }}</th>
+              <th>{{ 'Date'|t }}</th>
+              <th>{{ 'Statut'|t }}</th>
+              <th>{{ 'Créé le'|t }}</th>
+              <th>{{ 'Actions'|t }}</th>
+            </tr>
+          {% endif %}
+        </thead>
+        <tbody>
+          {% for item in items %}
+            {% if list_type == 'job' %}
+              <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.company|default('—') }}</td>
+                <td>{{ item.location|default('—') }}</td>
+                <td>{{ item.sector|default('—') }}</td>
+                <td>{{ item.contract_type|default('—') }}</td>
+                {# <td>{{ item.user_type|default('—') }}</td> #}
+                <td>
+                  <span class="bongolava-admin-badge bongolava-admin-badge--{{ item.status }}">
+                    {{ item.status_label }}
+                  </span>
+                </td>
+                <td>{{ item.created_at }}</td>
+                <td>
+                  <a class="button button--small button--primary" href="{{ item.detail_url }}">
+                    {{ 'Voir détails'|t }}
+                  </a>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.organizer|default('—') }}</td>
+                <td>{{ item.type|default('—') }}</td>
+                <td>{{ item.location|default('—') }}</td>
+                <td>{{ item.date|default('—') }}</td>
+                <td>
+                  <span class="bongolava-admin-badge bongolava-admin-badge--{{ item.status }}">
+                    {{ item.status_label }}
+                  </span>
+                </td>
+                <td>{{ item.created_at }}</td>
+                <td>
+                  <a class="button button--small button--primary" href="{{ item.detail_url }}">
+                    {{ 'Voir détails'|t }}
+                  </a>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if pager %}
+      <div class="bongolava-admin-pager">
+        {{ pager }}
+      </div>
+    {% endif %}
+  {% else %}
+    <p class="bongolava-admin-empty">{{ empty_message }}</p>
+  {% endif %}
+</div>

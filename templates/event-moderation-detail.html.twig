@@ -1,0 +1,87 @@
+{#
+/**
+ * @file
+ * Détail d'un événement pour validation admin.
+ */
+#}
+<div class="bongolava-admin bongolava-admin-detail">
+  <p><a href="{{ back_url }}" class="bongolava-admin-back">← {{ 'Retour à la liste'|t }}</a></p>
+
+  <div class="bongolava-admin-header">
+    {# <div>
+      <h1>{{ event.title }}</h1>
+      <p class="bongolava-admin-meta">
+        <span class="bongolava-admin-badge bongolava-admin-badge--{{ event.status }}">{{ status_label }}</span>
+        {% if event.type %}
+          <span class="bongolava-admin-badge">{{ event.type }}</span>
+        {% endif %}
+      </p>
+    </div> #}
+    {% if is_pending %}
+      <div class="bongolava-admin-actions">
+        {% if approve_form %}
+          <div class="bongolava-admin-approve-form">{{ approve_form }}</div>
+        {% endif %}
+        <button type="button" class="button button--danger bongolava-admin-open-cancel" data-dialog="bongolava-cancel-dialog">
+          {{ 'Annuler l\'événement'|t }}
+        </button>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="bongolava-admin-grid">
+    <div class="bongolava-admin-card">
+      <h2 class="bongolava-admin-strong">{{ 'Informations générales'|t }}</h2>
+      <dl>
+        <dt>{{ 'Type'|t }}</dt><dd>{{ event.type|default('—') }}</dd>
+        <dt>{{ 'Date'|t }}</dt><dd>{{ event.date|default('—') }}</dd>
+        <dt>{{ 'Horaires'|t }}</dt><dd>{{ event.horaires|default('—') }}</dd>
+        <dt>{{ 'Localisation'|t }}</dt><dd>{{ event.location|default('—') }}</dd>
+        <dt>{{ 'Adresse'|t }}</dt><dd>{{ event.address|default('—') }}</dd>
+        <dt>{{ 'Organisateur'|t }}</dt><dd>{{ event.organizer|default('—') }}</dd>
+        <dt>{{ 'Capacité'|t }}</dt><dd>{{ event.capacity is not null ? event.capacity : '—' }}</dd>
+        <dt>{{ 'Inscrits'|t }}</dt><dd>{{ event.registered }}</dd>
+        <dt>{{ 'Auteur'|t }}</dt><dd>{{ event.owner|default('—') }}</dd>
+        <dt>{{ 'Créé le'|t }}</dt><dd>{{ event.created_at }}</dd>
+      </dl>
+    </div>
+
+    <div class="bongolava-admin-card">
+      <h2 class="bongolava-admin-strong">{{ 'Contact'|t }}</h2>
+      <dl>
+        <dt>{{ 'Email'|t }}</dt><dd>{{ event.contact_email|default('—') }}</dd>
+        <dt>{{ 'Téléphone'|t }}</dt><dd>{{ event.contact_phone|default('—') }}</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="bongolava-admin-card">
+    <h2 class="bongolava-admin-strong">{{ 'Description'|t }}</h2>
+    <div class="bongolava-admin-text">{{ event.description|default('—')|nl2br }}</div>
+  </div>
+
+  {% if event.cancellation_reason %}
+    <div class="bongolava-admin-card bongolava-admin-card--warning">
+      <h2 class="bongolava-admin-strong">{{ 'Raison d\'annulation'|t }}</h2>
+      <div class="bongolava-admin-text">{{ event.cancellation_reason|nl2br }}</div>
+    </div>
+  {% endif %}
+
+  {% if is_pending and cancel_form %}
+    <div id="bongolava-cancel-dialog" class="bongolava-admin-dialog" hidden>
+      <div class="bongolava-admin-dialog__backdrop" data-close-dialog></div>
+      <div class="bongolava-admin-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="bongolava-cancel-title">
+        <div class="bongolava-admin-dialog__header">
+          <h2 id="bongolava-cancel-title">{{ 'Annuler l\'événement'|t }}</h2>
+          <button type="button" class="bongolava-admin-dialog__close" data-close-dialog aria-label="{{ 'Fermer'|t }}">×</button>
+        </div>
+        <div class="bongolava-admin-dialog__body">
+          {{ cancel_form }}
+          <p class="bongolava-admin-dialog__alt">
+            <a href="{{ cancel_url }}">{{ 'Ouvrir sur une page dédiée'|t }}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

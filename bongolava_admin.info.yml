@@ -1,0 +1,9 @@
+name: 'Bongolava Admin'
+type: module
+description: 'Pages d''administration pour la validation des offres d''emploi et des événements.'
+package: Bongolava
+core_version_requirement: ^9 || ^10
+dependencies:
+  - drupal:node
+  - drupal:user
+  - bongolava_job:bongolava_job

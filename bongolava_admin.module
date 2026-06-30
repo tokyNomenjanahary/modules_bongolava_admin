@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Bongolava Admin module hooks.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function bongolava_admin_theme($existing, $type, $theme, $path) {
+  return [
+    'bongolava_admin_job_detail' => [
+      'variables' => [
+        'job' => [],
+        'status_label' => '',
+        'is_pending' => FALSE,
+        'approve_form' => NULL,
+        'cancel_form' => NULL,
+        'cancel_url' => '',
+        'back_url' => '',
+      ],
+      'template' => 'job-moderation-detail',
+    ],
+    'bongolava_admin_event_detail' => [
+      'variables' => [
+        'event' => [],
+        'status_label' => '',
+        'is_pending' => FALSE,
+        'approve_form' => NULL,
+        'cancel_form' => NULL,
+        'cancel_url' => '',
+        'back_url' => '',
+      ],
+      'template' => 'event-moderation-detail',
+    ],
+    'bongolava_admin_content_list' => [
+      'variables' => [
+        'list_type' => 'job',
+        'title' => '',
+        'filter_form' => NULL,
+        'items' => [],
+        'total' => 0,
+        'empty_message' => '',
+        'pager' => NULL,
+      ],
+      'template' => 'content-moderation-list',
+    ],
+    'bongolava_admin_pending_list' => [
+      'variables' => [
+        'title' => '',
+        'items' => [],
+        'empty_message' => '',
+      ],
+      'template' => 'pending-moderation-list',
+    ],
+  ];
+}

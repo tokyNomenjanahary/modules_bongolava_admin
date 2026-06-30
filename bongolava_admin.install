@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * @file
+ * Install tasks for Bongolava Admin.
+ */
+
+use Drupal\user\Entity\Role;
+
+/**
+ * Implements hook_install().
+ */
+function bongolava_admin_install(): void {
+  $permission = 'moderate bongolava content';
+  foreach (['administrator', 'content_editor'] as $rid) {
+    $role = Role::load($rid);
+    if ($role && !$role->hasPermission($permission)) {
+      $role->grantPermission($permission);
+      $role->save();
+    }
+  }
+}

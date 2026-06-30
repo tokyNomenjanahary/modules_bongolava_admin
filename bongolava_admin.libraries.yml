@@ -1,0 +1,10 @@
+moderation:
+  version: 1.x
+  css:
+    theme:
+      css/moderation.css: {}
+  js:
+    js/moderation.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

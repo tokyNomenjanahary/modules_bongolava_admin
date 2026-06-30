@@ -1,0 +1,36 @@
+{#
+/**
+ * @file
+ * Liste des contenus en attente de modération.
+ */
+#}
+<div class="bongolava-admin">
+  {# <h1>{{ title }}</h1> #}
+
+  {% if items is not empty %}
+    <table class="bongolava-admin-table">
+      <thead>
+        <tr>
+          <th>{{ 'ID'|t }}</th>
+          <th>{{ 'Titre'|t }}</th>
+          <th>{{ 'Organisation / Auteur'|t }}</th>
+          <th>{{ 'Créé le'|t }}</th>
+          <th>{{ 'Actions'|t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.title }}</td>
+            <td>{{ item.company }}</td>
+            <td>{{ item.created_at }}</td>
+            <td><a class="button button--small" href="{{ item.url }}">{{ 'Examiner'|t }}</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="bongolava-admin-empty">{{ empty_message }}</p>
+  {% endif %}
+</div>

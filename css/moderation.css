@@ -1,0 +1,278 @@
+.bongolava-admin {
+  max-width: 1100px;
+}
+
+.bongolava-admin-back {
+  display: inline-block;
+  margin-bottom: 1rem;
+  text-decoration: none;
+}
+
+.bongolava-admin-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.bongolava-admin-header h1 {
+  margin: 0 0 0.5rem;
+}
+
+.bongolava-admin-meta {
+  margin: 0;
+}
+
+.bongolava-admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.bongolava-admin-approve-form .form-actions {
+  margin: 0;
+}
+
+.bongolava-admin-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.bongolava-admin-badge--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.bongolava-admin-badge--published {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.bongolava-admin-badge--rejected,
+.bongolava-admin-badge--cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.bongolava-admin-image img {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.bongolava-admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bongolava-admin-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.bongolava-admin-card--warning {
+  border-color: #fca5a5;
+  background: #fff7f7;
+}
+
+.bongolava-admin-card h2 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.bongolava-admin-card dl {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.bongolava-admin-card dt {
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.bongolava-admin-card dd {
+  margin: 0;
+}
+
+.bongolava-admin-text {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.bongolava-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.bongolava-admin-table th,
+.bongolava-admin-table td {
+  border: 1px solid #e5e7eb;
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+}
+
+.bongolava-admin-table th {
+  background: #f9fafb;
+}
+
+.bongolava-admin-empty {
+  padding: 2rem;
+  background: #fff;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+}
+
+.bongolava-admin-list__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.bongolava-admin-list__header h1 {
+  margin: 0;
+}
+
+.bongolava-admin-list__count {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.bongolava-admin-filters {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.bongolava-admin-filters .form--inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: flex-end;
+}
+
+.bongolava-admin-filters .form-item {
+  margin: 0;
+  min-width: 140px;
+}
+
+.bongolava-admin-filters-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: flex-end;
+}
+
+.bongolava-admin-filters-form > .form-item,
+.bongolava-admin-filters-form > .form-actions {
+  margin: 0;
+}
+
+.bongolava-admin-filters-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.bongolava-admin-table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1rem;
+}
+
+.bongolava-admin-pager {
+  margin-top: 1rem;
+}
+
+.bongolava-admin-badge--finished {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.bongolava-admin-badge--expired {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.bongolava-admin-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.bongolava-admin-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.bongolava-admin-dialog__panel {
+  position: relative;
+  z-index: 1;
+  width: min(560px, calc(100% - 2rem));
+  margin: 5vh auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.bongolava-admin-dialog__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.bongolava-admin-dialog__header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.bongolava-admin-dialog__close {
+  border: 0;
+  background: transparent;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bongolava-admin-dialog__body {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.bongolava-admin-dialog__alt {
+  margin: 1rem 0 0;
+  font-size: 0.875rem;
+}
+
+.bongolava-admin-cancel-reason {
+  width: 100%;
+  min-height: 120px;
+}
+
+.bongolava-admin-strong {
+  font-weight: 600;
+}

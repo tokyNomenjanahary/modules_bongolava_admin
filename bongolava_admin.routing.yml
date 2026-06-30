@@ -1,0 +1,87 @@
+bongolava_admin.jobs_list:
+  path: '/admin/bongolava/offres'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\JobModerationController::listAll'
+    _title: 'Offres d''emploi'
+  requirements:
+    _permission: 'moderate bongolava content'
+
+bongolava_admin.jobs_pending:
+  path: '/admin/bongolava/offres/attente'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\JobModerationController::listPending'
+    _title: 'Offres en attente'
+  requirements:
+    _permission: 'moderate bongolava content'
+
+bongolava_admin.job_review:
+  path: '/admin/bongolava/offres/{node}'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\JobModerationController::review'
+    _title_callback: '\Drupal\bongolava_admin\Controller\JobModerationController::reviewTitle'
+  requirements:
+    _permission: 'moderate bongolava content'
+    _bongolava_moderation_access: 'offre_emploi'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+
+bongolava_admin.job_cancel:
+  path: '/admin/bongolava/offres/{node}/annuler'
+  defaults:
+    _form: '\Drupal\bongolava_admin\Form\JobCancelForm'
+    _title: 'Annuler une offre'
+  requirements:
+    _permission: 'moderate bongolava content'
+    _bongolava_moderation_access: 'offre_emploi'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+
+bongolava_admin.events_list:
+  path: '/admin/bongolava/evenements'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\EventModerationController::listAll'
+    _title: 'Événements'
+  requirements:
+    _permission: 'moderate bongolava content'
+
+bongolava_admin.events_pending:
+  path: '/admin/bongolava/evenements/attente'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\EventModerationController::listPending'
+    _title: 'Événements en attente'
+  requirements:
+    _permission: 'moderate bongolava content'
+
+bongolava_admin.event_review:
+  path: '/admin/bongolava/evenements/{node}'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\EventModerationController::review'
+    _title_callback: '\Drupal\bongolava_admin\Controller\EventModerationController::reviewTitle'
+  requirements:
+    _permission: 'moderate bongolava content'
+    _bongolava_moderation_access: 'evenement'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node
+
+bongolava_admin.event_cancel:
+  path: '/admin/bongolava/evenements/{node}/annuler'
+  defaults:
+    _form: '\Drupal\bongolava_admin\Form\EventCancelForm'
+    _title: 'Annuler un événement'
+  requirements:
+    _permission: 'moderate bongolava content'
+    _bongolava_moderation_access: 'evenement'
+    node: \d+
+  options:
+    parameters:
+      node:
+        type: entity:node

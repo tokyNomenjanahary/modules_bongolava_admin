@@ -1,0 +1,27 @@
+bongolava_admin.jobs_list:
+  title: 'Offres d''emploi'
+  description: 'Lister, filtrer et valider toutes les offres d''emploi.'
+  route_name: bongolava_admin.jobs_list
+  parent: system.admin_content
+  weight: 50
+
+bongolava_admin.jobs_pending:
+  title: 'Offres en attente'
+  description: 'Lister et valider les offres d''emploi en attente de validation.'
+  route_name: bongolava_admin.jobs_pending
+  parent: system.admin_content
+  weight: 51
+
+bongolava_admin.events_list:
+  title: 'Événements'
+  description: 'Lister, filtrer et valider tous les événements.'
+  route_name: bongolava_admin.events_list
+  parent: system.admin_content
+  weight: 52
+
+bongolava_admin.events_pending:
+  title: 'Événements en attente'
+  description: 'Lister et valider les événements en attente de validation.'
+  route_name: bongolava_admin.events_pending
+  parent: system.admin_content
+  weight: 53

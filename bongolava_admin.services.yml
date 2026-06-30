@@ -1,0 +1,21 @@
+services:
+  bongolava_admin.job_display:
+    class: Drupal\bongolava_admin\Service\JobDisplayService
+    arguments: ['@entity_type.manager', '@file_url_generator']
+
+  bongolava_admin.event_display:
+    class: Drupal\bongolava_admin\Service\EventDisplayService
+    arguments: ['@entity_type.manager']
+
+  bongolava_admin.job_list_query:
+    class: Drupal\bongolava_admin\Service\JobListQueryService
+    arguments: ['@entity_type.manager', '@bongolava_admin.job_display', '@pager.manager']
+
+  bongolava_admin.event_list_query:
+    class: Drupal\bongolava_admin\Service\EventListQueryService
+    arguments: ['@entity_type.manager', '@bongolava_admin.event_display', '@pager.manager']
+
+  bongolava_admin.access_checker:
+    class: Drupal\bongolava_admin\Access\ModerationAccessChecker
+    tags:
+      - { name: access_check, applies_to: _bongolava_moderation_access }
