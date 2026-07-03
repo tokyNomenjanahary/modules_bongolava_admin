@@ -5,6 +5,51 @@
  * Bongolava Admin module hooks.
  */
 
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+use Drupal\user\Entity\User;
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function bongolava_admin_form_user_login_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#submit'][] = 'bongolava_admin_user_login_redirect_submit';
+}
+
+/**
+ * Custom login redirect logic.
+ */
+function bongolava_admin_user_login_redirect_submit(array &$form, FormStateInterface $form_state) {
+  $account = User::load(\Drupal::currentUser()->id());
+
+  if (!$account) {
+    return;
+  }
+
+  // Remove default "authenticated" role
+  $roles = array_values(array_diff($account->getRoles(), ['authenticated']));
+
+  // If multiple roles → home
+  if (count($roles) > 1) {
+    $form_state->setRedirectUrl(Url::fromUserInput('/'));
+    return;
+  }
+
+  // Role-based redirects
+  if (in_array('administrator', $roles)) {
+    $form_state->setRedirectUrl(Url::fromUserInput('/admin'));
+    return;
+  }
+
+  if (in_array('content_editor', $roles)) {
+    $form_state->setRedirectUrl(Url::fromUserInput('/admin/bongolava/offres'));
+    return;
+  }
+
+  // Default redirect
+  $form_state->setRedirectUrl(Url::fromUserInput('/'));
+}
+
 /**
  * Implements hook_theme().
  */
@@ -22,6 +67,7 @@ function bongolava_admin_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'job-moderation-detail',
     ],
+
     'bongolava_admin_event_detail' => [
       'variables' => [
         'event' => [],
@@ -34,6 +80,7 @@ function bongolava_admin_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'event-moderation-detail',
     ],
+
     'bongolava_admin_content_list' => [
       'variables' => [
         'list_type' => 'job',
@@ -46,6 +93,7 @@ function bongolava_admin_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'content-moderation-list',
     ],
+
     'bongolava_admin_pending_list' => [
       'variables' => [
         'title' => '',
