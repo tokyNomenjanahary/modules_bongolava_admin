@@ -102,5 +102,13 @@ function bongolava_admin_theme($existing, $type, $theme, $path) {
       ],
       'template' => 'pending-moderation-list',
     ],
+    'bongolava_admin_recruiter_detail' => [
+      'variables' => [
+        'recruiter' => [],
+        'activate_form' => NULL,
+        'back_url' => '',
+      ],
+      'template' => 'recruiter-moderation-detail',
+    ],
   ];
 }

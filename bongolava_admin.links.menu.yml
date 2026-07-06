@@ -25,3 +25,10 @@ bongolava_admin.events_pending:
   route_name: bongolava_admin.events_pending
   parent: system.admin_content
   weight: 53
+
+bongolava_admin.recruiters_list:
+  title: 'Recruteurs'
+  description: 'Lister tous les utilisateurs avec le rôle recruteur.'
+  route_name: bongolava_admin.recruiters_list
+  parent: system.admin_content
+  weight: 54
