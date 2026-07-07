@@ -32,3 +32,10 @@ bongolava_admin.recruiters_list:
   route_name: bongolava_admin.recruiters_list
   parent: system.admin_content
   weight: 54
+
+bongolava_admin.candidates_list:
+  title: 'Candidats'
+  description: 'Lister tous les utilisateurs avec le rôle candidat.'
+  route_name: bongolava_admin.candidates_list
+  parent: system.admin_content
+  weight: 55

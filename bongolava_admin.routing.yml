@@ -119,4 +119,37 @@ bongolava_admin.recruiter_toggle:
       user:
         type: entity:user
 
+bongolava_admin.candidates_list:
+  path: '/admin/bongolava/candidats'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\CandidateController::listAll'
+    _title: 'Candidats'
+  requirements:
+    _permission: 'moderate bongolava content'
+
+bongolava_admin.candidate_detail:
+  path: '/admin/bongolava/candidats/{user}'
+  defaults:
+    _controller: '\Drupal\bongolava_admin\Controller\CandidateController::detail'
+    _title_callback: '\Drupal\bongolava_admin\Controller\CandidateController::detailTitle'
+  requirements:
+    _permission: 'moderate bongolava content'
+    user: \d+
+  options:
+    parameters:
+      user:
+        type: entity:user
+
+bongolava_admin.candidate_toggle:
+  path: '/admin/bongolava/candidats/{user}/toggle'
+  defaults:
+    _form: '\Drupal\bongolava_admin\Form\CandidateToggleStatusForm'
+  requirements:
+    _permission: 'moderate bongolava content'
+    user: \d+
+  options:
+    parameters:
+      user:
+        type: entity:user
+
 

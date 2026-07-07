@@ -5,44 +5,38 @@ namespace Drupal\bongolava_admin\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
-use Drupal\Core\Render\Markup;
 use Drupal\user\UserInterface;
-use Drupal\bongolava_job\Repository\RecruiterRepository;
 use Drupal\user\Entity\User;
+use Drupal\bongolava_job\Repository\CandidateRepository;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Contrôleur pour lister les utilisateurs de rôle "recruteur".
+ * Controller for listing users with role "candidate" and showing details.
  */
-final class RecruiterController extends ControllerBase {
+final class CandidateController extends ControllerBase {
 
   public function __construct(
-    private readonly RecruiterRepository $recruiterRepository,
+    private readonly CandidateRepository $candidateRepository,
   ) {}
 
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('bongolava_job.recruiter_repository'),
+      $container->get('bongolava_job.candidate_repository'),
     );
   }
 
-  /**
-   * Liste tous les utilisateurs possédant le rôle `recruiter` avec filtres et pagination.
-   */
-  public function listAll(Request $request = NULL): array {
+  public function listAll(): array {
+    $request = \Drupal::request();
     $filters = [
-      'keyword' => trim((string) ($request?->query->get('keyword', '') ?? '')),
-      'status' => trim((string) ($request?->query->get('status', '') ?? '')),
+      'keyword' => trim((string) ($request->query->get('keyword', '') ?? '')),
+      'status' => trim((string) ($request->query->get('status', '') ?? '')),
     ];
 
     $per_page = 20;
 
-    // Build count query.
     $count_query = \Drupal::entityQuery('user')
       ->accessCheck(FALSE)
-      ->condition('roles', 'recruiter');
+      ->condition('roles', 'candidate');
     if (!empty($filters['status'])) {
       if ($filters['status'] === 'active') {
         $count_query->condition('status', 1);
@@ -56,15 +50,13 @@ final class RecruiterController extends ControllerBase {
     }
     $total = (int) $count_query->count()->execute();
 
-    // Initialize pager
     $pager = \Drupal::service('pager.manager')->createPager($total, $per_page);
     $current_page = $pager->getCurrentPage();
     $offset = $current_page * $per_page;
 
-    // Build main query with range
     $query = \Drupal::entityQuery('user')
       ->accessCheck(FALSE)
-      ->condition('roles', 'recruiter')
+      ->condition('roles', 'candidate')
       ->sort('created', 'DESC')
       ->range($offset, $per_page);
     if (!empty($filters['status'])) {
@@ -80,7 +72,7 @@ final class RecruiterController extends ControllerBase {
     }
 
     $uids = $query->execute();
-    $users = User::loadMultiple($uids ?: []);
+    $users = \Drupal\user\Entity\User::loadMultiple($uids ?: []);
 
     $header = [
       $this->t('UID'),
@@ -97,7 +89,7 @@ final class RecruiterController extends ControllerBase {
       }
       $status_label = $user->isActive() ? $this->t('Actif') : $this->t('Bloqué');
 
-      $view_link = Link::fromTextAndUrl($this->t('Voir'), Url::fromRoute('bongolava_admin.recruiter_detail', ['user' => $user->id()]))->toRenderable();
+      $view_link = Link::fromTextAndUrl($this->t('Voir'), Url::fromRoute('bongolava_admin.candidate_detail', ['user' => $user->id()]))->toRenderable();
       $view_link['#attributes'] = ['class' => ['button', 'button--small', 'button--primary']];
 
       $rows[] = [
@@ -114,16 +106,11 @@ final class RecruiterController extends ControllerBase {
     }
 
     $build = [];
-    $filter_form = $this->formBuilder()->getForm(\Drupal\bongolava_admin\Form\RecruiterListFiltersForm::class, $filters);
-    $build['filter_form'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['bongolava-admin-filters']],
-      'form' => $filter_form,
-    ];
+    $build['filter_form'] = $this->formBuilder()->getForm(\Drupal\bongolava_admin\Form\CandidateListFiltersForm::class, $filters);
 
     if (empty($rows)) {
       $build['empty'] = [
-        '#markup' => $this->t('Aucun utilisateur recruteur trouvé.'),
+        '#markup' => $this->t('Aucun utilisateur candidat trouvé.'),
       ];
     }
     else {
@@ -136,58 +123,73 @@ final class RecruiterController extends ControllerBase {
 
     $build['pager'] = ['#type' => 'pager'];
     $build['#attached'] = ['library' => ['bongolava_admin/moderation']];
-    $build['#title'] = $this->t('Liste des recruteurs');
+    $build['#title'] = $this->t('Liste des candidats');
 
     return $build;
   }
 
-  /**
-   * Page de détail montrant les données liées au profil recruteur.
-   */
   public function detail(UserInterface $user): array {
-    $profile = $this->recruiterRepository->loadByUser($user->id());
-
+    $profile = $this->candidateRepository->loadByUser($user->id());
     $rows = [
       [$this->t('UID'), $user->id()],
       [$this->t('Nom'), $user->getDisplayName()],
       [$this->t('Email'), $user->getEmail()],
-      [$this->t('Organisation'), $profile['organization'] ?? ''],
-      [$this->t('NIF'), $profile['nif_number'] ?? ''],
-      [$this->t('CIN'), $profile['cin_number'] ?? ''],
       [$this->t('Téléphone'), $profile['phone'] ?? ''],
       [$this->t('Adresse'), $profile['address'] ?? ''],
-      [$this->t('Site web'), $profile['website'] ?? ''],
+      [$this->t('Localisation'), $profile['location'] ?? ''],
+      [$this->t('Âge'), $profile['age'] ?? ''],
+      [$this->t('Niveau d\'expérience'), $profile['experience_level'] ?? ''],
+      [$this->t('Compétences'), $profile['skills'] ?? ''],
+      [$this->t('Bio'), $profile['bio'] ?? ''],
       [$this->t('Créé le'), $this->formatProfileDate($profile['created_at'] ?? '')],
-    //   [$this->t('Mis à jour'), $profile['updated_at'] ?? ''],
     ];
 
+    // Render a simple HTML table to avoid render-array nesting issues
+    $html = '<table class="bongolava-admin-table">';
+    foreach ($rows as $r) {
+      $html .= '<tr><td>' . $r[0] . '</td><td>' . htmlspecialchars((string) $r[1], ENT_QUOTES, 'UTF-8') . '</td></tr>';
+    }
+    $html .= '</table>';
     $build = [
-      '#type' => 'table',
-      '#rows' => $rows,
-      '#title' => $this->t('Détails recruteur : @name', ['@name' => $user->getDisplayName()]),
-    //   'back' => [
-    //     '#type' => 'link',
-    //     '#title' => $this->t('Retour à la liste'),
-    //     '#url' => Url::fromRoute('bongolava_admin.recruiters_list'),
-    //     '#attributes' => ['class' => ['button']],
-    //   ],
+      '#markup' => \Drupal\Core\Render\Markup::create($html),
+      '#title' => $this->t('Détails candidat : @name', ['@name' => $user->getDisplayName()]),
     ];
 
-    // Build the FAPI form for toggling status and attach it to the page.
-    $form = $this->formBuilder()->getForm(\Drupal\bongolava_admin\Form\RecruiterToggleStatusForm::class, $user->id());
+    // Photo display
+    if (!empty($profile['photo_path'])) {
+      $photo_path = $profile['photo_path'];
+      // Normalize if stored as "photos/filename.jpg" or just "filename.jpg".
+      if (str_starts_with($photo_path, 'photos/')) {
+        $photo_path = substr($photo_path, strlen('photos/'));
+      }
+      $public_uri = 'public://bongolava_job/photos/' . $photo_path;
+      $photo_url = file_create_url($public_uri);
+      $img = '<img src="' . htmlspecialchars($photo_url, ENT_QUOTES, 'UTF-8') . '" alt="' . htmlspecialchars($user->getDisplayName(), ENT_QUOTES, 'UTF-8') . '" style="max-width:200px; height:auto;" />';
+      $html .= '<table class="bongolava-admin-table"><tr><td>' . $this->t('Photo') . '</td><td>' . $img . '</td></tr></table>';
+    }
 
-    // Render the form to HTML to avoid any theme nesting issues inside the table cell.
+    // CV display
+    if (!empty($profile['cv_path'])) {
+      $cv_path = $profile['cv_path'];
+      if (str_starts_with($cv_path, 'cvs/')) {
+        $cv_path = substr($cv_path, strlen('cvs/'));
+      }
+      $public_uri = 'public://bongolava_job/cvs/' . $cv_path;
+      $cv_url = file_create_url($public_uri);
+      // Build a simple safe anchor HTML to avoid Url objects ending up in
+      // attributes (which can cause rendering errors). Use Markup to mark
+      // it as safe HTML.
+      $anchor = '<a href="' . htmlspecialchars($cv_url, ENT_QUOTES, 'UTF-8') . '" target="_blank" class="button">' . $this->t('Télécharger le CV') . '</a>';
+      $html .= '<table class="bongolava-admin-table"><tr><td>' . $this->t('CV') . '</td><td>' . $anchor . '</td></tr></table>';
+    }
+
+    // Toggle form
+    $form = $this->formBuilder()->getForm(\Drupal\bongolava_admin\Form\CandidateToggleStatusForm::class, $user->id());
     $rendered_form = \Drupal::service('renderer')->renderRoot($form);
+    $html .= '<div class="bongolava-admin-actions">' . $rendered_form . '</div>';
+    $build['#markup'] = \Drupal\Core\Render\Markup::create($html);
 
-    // Also add the toggle form as a visible row in the details table for clarity.
-    $build['#rows'][] = [
-      'data' => [
-        $this->t('Actions'),
-        Markup::create($rendered_form),
-      ],
-    ];
     $build['#attached'] = ['library' => ['bongolava_admin/moderation']];
-
     return $build;
   }
 
@@ -198,6 +200,7 @@ final class RecruiterController extends ControllerBase {
     if (empty($value)) {
       return '';
     }
+    // If already an integer timestamp, use it. Otherwise try strtotime.
     if (is_numeric($value)) {
       $ts = (int) $value;
     }
@@ -207,6 +210,7 @@ final class RecruiterController extends ControllerBase {
         return (string) $value;
       }
     }
+    // Use Drupal date.formatter service to format according to site language.
     $day = (int) date('j', $ts);
     $monthIndex = (int) date('n', $ts);
     $year = (int) date('Y', $ts);
@@ -218,33 +222,8 @@ final class RecruiterController extends ControllerBase {
     return $day . ' ' . $monthName . ' ' . $year;
   }
 
-  /**
-   * Basculer l'état actif/bloqué d'un utilisateur recruteur.
-   */
-  public function toggle(UserInterface $user, Request $request): RedirectResponse {
-    // Validate CSRF token from POST.
-    $token = (string) $request->request->get('token', '');
-    $csrf_service = \Drupal::service('csrf_token');
-    if (!$csrf_service->validate($token, 'bongolava_admin.recruiter_toggle:' . $user->id())) {
-      throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
-    }
-
-    if ($user->isActive()) {
-      $user->block();
-      $this->messenger()->addStatus($this->t('Le compte @name a été désactivé.', ['@name' => $user->getDisplayName()]));
-    }
-    else {
-      $user->activate();
-      $this->messenger()->addStatus($this->t('Le compte @name a été activé.', ['@name' => $user->getDisplayName()]));
-    }
-    $user->save();
-
-    // Redirect to the recruiters list after the action.
-    return new RedirectResponse(Url::fromRoute('bongolava_admin.recruiters_list')->toString());
-  }
-
   public function detailTitle(User $user): string {
-    return (string) $this->t('Recruteur : @name', ['@name' => $user->getDisplayName()]);
+    return (string) $this->t('Candidat : @name', ['@name' => $user->getDisplayName()]);
   }
 
 }
